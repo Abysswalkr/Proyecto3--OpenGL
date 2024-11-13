@@ -25,36 +25,45 @@ skyboxTextures = ["skybox/right.jpg",
 
 rend.CreateSkybox(skyboxTextures)
 
-faceModel = Model("models/model.obj")
-faceModel.AddTexture("textures/model.bmp")
-faceModel.AddTexture("textures/model_normal.bmp")
-faceModel.translation.z = -5
-faceModel.scale.x = 2
-faceModel.scale.y = 2
-faceModel.scale.z = 2
+catModel = Model("models/cat.obj")
+catModel.AddTexture("textures/cat.bmp")
+catModel.AddTexture("textures/model_normal.bmp")
+catModel.translation.z = -5
+catModel.scale.x = 2
+catModel.scale.y = 2
+catModel.scale.z = 2
 
-moonModel = Model("models/sphere.obj")
-moonModel.AddTexture("textures/moon_diffuse.jpg")
-moonModel.AddTexture("textures/moon_normal.jpg")
-moonModel.translation.z = -5
-moonModel.scale.x = 0.005
-moonModel.scale.y = 0.005
-moonModel.scale.z = 0.005
-moonModel.visible = False
+grandpaModel = Model("models/viejo.obj")
+grandpaModel.AddTexture("textures/viejo.bmp")
+grandpaModel.AddTexture("textures/moon_normal.jpg")
+grandpaModel.translation.z = -5
+grandpaModel.scale.x = 2
+grandpaModel.scale.y = 1
+grandpaModel.scale.z = 2
+grandpaModel.visible = False
 
-spidey = Model("models/spidey.obj")
-spidey.AddTexture("textures/spidey_body_diff.png")
-spidey.AddTexture("textures/spidey_body_normal.png")
-spidey.translation.z = -5
-spidey.rotation.y = 180
-spidey.scale.x = 0.03
-spidey.scale.y = 0.03
-spidey.scale.z = 0.03
-spidey.visible = False
+jake = Model("models/jake.obj")
+jake.AddTexture("textures/jake.bmp")
+jake.AddTexture("textures/spidey_body_normal.png")
+jake.translation.z = -5
+jake.scale.x = 2
+jake.scale.y = 1
+jake.scale.z = 2
+jake.visible = False
 
-rend.scene.append(faceModel)
-rend.scene.append(moonModel)
-rend.scene.append(spidey)
+coachModel = Model("models/Coach.obj")
+coachModel.AddTexture("textures/Coach.bmp")
+coachModel.AddTexture("textures/spidey_body_normal.png")
+coachModel.translation.z = -5
+coachModel.scale.x = 2
+coachModel.scale.y = 1
+coachModel.scale.z = 2
+coachModel.visible = False
+
+rend.scene.append(catModel)
+rend.scene.append(grandpaModel)
+rend.scene.append(jake)
+rend.scene.append(coachModel)
 
 vShader = vertex_shader
 fShader = fragment_shader
@@ -197,8 +206,8 @@ while isRunning:
 		if mouseVel[1] < 0 and rend.camera.position.y > -2:
 			rend.camera.position.y += mouseVel[1] * deltaTime
 				
-	rend.camera.Orbit( faceModel.translation, camDistance, camAngle)
-	rend.camera.LookAt( faceModel.translation )
+	rend.camera.Orbit( catModel.translation, camDistance, camAngle)
+	rend.camera.LookAt( catModel.translation )
 
 	rend.Render()
 
