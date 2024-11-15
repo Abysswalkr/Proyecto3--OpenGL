@@ -728,4 +728,140 @@ void main()
 }
 '''
 
+wave_vertex_shader = '''
+#version 450 core
 
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 texCoords;
+layout (location = 2) in vec3 normals;
+
+out vec2 outTexCoords;
+out vec3 outNormals;
+out vec3 FragPos;
+
+uniform float time;
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+
+void main()
+{
+    // Efecto de giro en la coordenada X y Z
+    float angle = position.y * 0.5 + time; // Calcula el ángulo de giro basado en la altura y el tiempo
+    float s = sin(angle);
+    float c = cos(angle);
+
+    // Aplica la rotación a la posición en X y Z
+    vec3 swirlPosition = position;
+    swirlPosition.x = position.x * c - position.z * s;
+    swirlPosition.z = position.x * s + position.z * c;
+
+    // Calcular la posición del fragmento en espacio mundo
+    FragPos = vec3(modelMatrix * vec4(swirlPosition, 1.0));
+
+    // Pasar las normales al espacio mundo
+    outNormals = mat3(transpose(inverse(modelMatrix))) * normals;
+
+    // Pasar las coordenadas de textura
+    outTexCoords = texCoords;
+
+    // Calcular la posición final del vértice
+    gl_Position = projectionMatrix * viewMatrix * vec4(FragPos, 1.0);
+}
+'''
+
+explosion_vertex_shader = '''
+#version 450 core
+
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 texCoords;
+layout (location = 2) in vec3 normals;
+
+out vec2 outTexCoords;
+out vec3 outNormals;
+out vec3 FragPos;
+
+uniform float time;
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+
+void main()
+{
+    // Calcular la dirección de expansión para el efecto de explosión
+    vec3 explosionDirection = normalize(position);
+    float explosionIntensity = sin(time) * 0.5 + 0.5; // Oscila entre 0 y 1 con el tiempo
+
+    // Aplicar la expansión en la posición del vértice
+    vec3 explodedPosition = position + explosionDirection * explosionIntensity;
+
+    // Calcular FragPos en espacio mundo
+    FragPos = vec3(modelMatrix * vec4(explodedPosition, 1.0));
+
+    // Pasar las normales al espacio mundo
+    outNormals = mat3(transpose(inverse(modelMatrix))) * normals;
+
+    // Pasar las coordenadas de textura
+    outTexCoords = texCoords;
+
+    // Calcular la posición final del vértice
+    gl_Position = projectionMatrix * viewMatrix * vec4(FragPos, 1.0);
+}
+'''
+
+fire_fragment_shader = '''
+#version 450 core
+
+in vec2 outTexCoords;
+in vec4 outPosition;
+
+out vec4 fragColor;
+
+uniform float time;
+
+float noise(vec2 p) {
+    return fract(sin(dot(p ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+void main() {
+    vec2 pos = outTexCoords * 5.0;  // Escalar las coordenadas de textura para mayor detalle
+
+    // Cálculo de ruido con desplazamiento animado en Y
+    float n = noise(pos + vec2(0, time * 2.0));
+    n += noise(pos * 2.0 + vec2(0, time * 1.5)) * 0.5;
+    n += noise(pos * 4.0 + vec2(0, time)) * 0.25;
+
+    // Crear un degradado de colores tipo fuego (amarillo-rojo-negro)
+    vec3 color = mix(vec3(1.0, 0.5, 0.0), vec3(1.0, 1.0, 0.0), n);
+    color = mix(color, vec3(0.0, 0.0, 0.0), n * n);
+
+    fragColor = vec4(color, 1.0);
+}
+'''
+
+glass_fragment_shader = '''
+#version 450 core
+
+in vec2 outTexCoords;
+in vec4 outPosition;
+in vec3 outNormals;
+
+out vec4 fragColor;
+
+uniform samplerCube skybox;
+uniform vec3 cameraPos;
+
+void main()
+{
+    // Cálculo de reflejo y refracción usando fresnel
+    vec3 I = normalize(outPosition.xyz - cameraPos);
+    vec3 R = reflect(I, normalize(outNormals));
+    vec3 refractColor = texture(skybox, R).rgb;
+
+    // Efecto de transparencia basado en el ángulo de visión (fresnel)
+    float fresnel = pow(1.0 - dot(normalize(outNormals), I), 3.0);
+    vec3 glassColor = mix(vec3(0.8, 0.9, 1.0), refractColor, fresnel);
+
+    fragColor = vec4(glassColor, 0.5);  // Semitransparente
+}
+'''
