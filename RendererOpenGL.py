@@ -60,10 +60,31 @@ coachModel.scale.y = 1
 coachModel.scale.z = 2
 coachModel.visible = False
 
+plane = Model("models/plane.obj")
+plane.AddTexture("textures/muro.jpg")
+# Colocar el plano en posición vertical y ajustar su posición
+plane.translation.x = 0      # Centrar en el eje X
+plane.translation.y = 0      # Elevar o bajar en el eje Y según sea necesario
+plane.translation.z = -6     # Colocar un poco más lejos en el eje Z
+
+# Rotación para que esté en posición vertical (como una pared)
+plane.rotation.y = 0
+plane.rotation.x = 90
+plane.rotation.z = 180
+
+# Ajustar la escala para que parezca una pared
+plane.scale.x = 20     # Ancho de la pared
+plane.scale.y = 20     # Altura de la pared
+plane.scale.z = 1      # Profundidad mínima para que sea una superficie delgada
+
+# Hacer que el plano sea visible
+plane.visible = True
+
 rend.scene.append(catModel)
 rend.scene.append(grandpaModel)
 rend.scene.append(jake)
 rend.scene.append(coachModel)
+rend.scene.append(plane)
 
 vShader = vertex_shader
 fShader = fragment_shader
@@ -97,13 +118,21 @@ while isRunning:
 
 			if event.y > 0 and camDistance > 2:
 				camDistance -= event.y * deltaTime * 10
-				
+
+		# Modificación en la lógica de cambio de modelo
 		elif event.type == pygame.MOUSEBUTTONDOWN:
 			if pygame.mouse.get_pressed()[2]:
 				modelIndex += 1
-				modelIndex %= len(rend.scene)
-				for i in range(len(rend.scene)):
-					rend.scene[i].visible = i == modelIndex
+				modelIndex %= (len(rend.scene) + 1)  # Añadir un estado adicional para mostrar todos los modelos
+
+				if modelIndex == len(rend.scene):
+					# Mostrar todos los modelos
+					for model in rend.scene:
+						model.visible = True
+				else:
+					# Mostrar solo el modelo seleccionado
+					for i in range(len(rend.scene)):
+						rend.scene[i].visible = (i == modelIndex)
 			
 		elif event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_ESCAPE:
@@ -114,40 +143,40 @@ while isRunning:
 				
 			# Vertex Shaders
 			elif event.key == pygame.K_1:
-				vShader = vertex_shader
+				vShader = animated_vertex_shader
 				rend.SetShaders(vShader, fShader)
 				
 			elif event.key == pygame.K_2:
-				vShader = fat_shader
+				vShader = wave_vertex_shader
 				rend.SetShaders(vShader, fShader)
 				
 			elif event.key == pygame.K_3:
-				vShader = jelly_shader
+				vShader = pulsating_vertex_shader
 				rend.SetShaders(vShader, fShader)
 				
 			elif event.key == pygame.K_4:
-				vShader = turbulence_shader
+				vShader = explosion_vertex_shader
 				rend.SetShaders(vShader, fShader)
 				
 			# Fragment Shaders
 			elif event.key == pygame.K_5:
-				fShader = fragment_shader
+				fShader = fire_fragment_shader
 				rend.SetShaders(vShader, fShader)
 				
 			elif event.key == pygame.K_6:
-				fShader = toon_shader
+				fShader = pulsating_fragment_shader
 				rend.SetShaders(vShader, fShader)			
 				
 			elif event.key == pygame.K_7:
-				fShader = negative_shader
+				fShader = glass_fragment_shader
 				rend.SetShaders(vShader, fShader)
 				
 			elif event.key == pygame.K_8:
-				fShader = mirror_shader
+				fShader = high_fragment_shader
 				rend.SetShaders(vShader, fShader)
 				
 			elif event.key == pygame.K_9:
-				fShader = sapphire_shader
+				fShader = scaner_fragment_shader
 				rend.SetShaders(vShader, fShader)
 				
 			elif event.key == pygame.K_0:
