@@ -4,7 +4,7 @@ from buffer import Buffer
 from pygame import image
 
 from OpenGL.GL import *
-import glm # pip install PyGLM
+import glm
 
 
 class Model(object):
@@ -67,12 +67,12 @@ class Model(object):
 			deltaPos2 = glm.sub(glm.vec3(facePositions[2]), glm.vec3(facePositions[0]))
 			deltaUV1 =  glm.sub(glm.vec2(faceTexCoords[1]), glm.vec2(faceTexCoords[0]))
 			deltaUV2 =  glm.sub(glm.vec2(faceTexCoords[2]), glm.vec2(faceTexCoords[0]))
-			
+
 			try:
 				r = 1.0 / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x)
 				tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r
-			except:
-				continue
+			except ZeroDivisionError:
+				tangent = glm.vec3(1.0, 0.0, 0.0)  # Usa un tangente predeterminado si ocurre una división por
 				
 			for value in facePositions[0]: positions.append(value)
 			for value in faceTexCoords[0]: texCoords.append(value)
@@ -159,8 +159,13 @@ class Model(object):
 		glDisableVertexAttribArray(1)
 		glDisableVertexAttribArray(2)
 		glDisableVertexAttribArray(3)
-		
-			
+
+	def InvertNormals(self):
+		# Invierte las normales del modelo cargado
+		for i in range(len(self.objFile.normals)):
+			self.objFile.normals[i] = [-v for v in self.objFile.normals[i]]
+		self.BuildBuffers()  # Reconstruir los buffers después de modificar las normales
+
 
 		
 		

@@ -1,10 +1,24 @@
 import pygame
+import glm
 from pygame.locals import *
 
 from gl import Renderer
 from model import Model
 from shaders import *
 
+def GetSceneCenter(scene):
+    center = glm.vec3(0, 0, 0)
+    visibleModels = 0
+
+    for model in scene:
+        if model.visible:  # Solo consideramos los modelos visibles
+            center += model.translation
+            visibleModels += 1
+
+    if visibleModels > 0:
+        center /= visibleModels  # Calcula el promedio de las posiciones visibles
+
+    return center
 
 width = 1280
 height = 720
@@ -100,6 +114,7 @@ plane.scale.x = 5
 plane.scale.y = 5
 plane.scale.z = 2
 plane.visible = True
+plane.InvertNormals()
 
 rend.scene.append(catModel)
 rend.scene.append(grandpaModel)
@@ -255,9 +270,15 @@ while isRunning:
 			
 		if mouseVel[1] < 0 and rend.camera.position.y > -2:
 			rend.camera.position.y += mouseVel[1] * deltaTime
-				
-	rend.camera.Orbit( catModel.translation, camDistance, camAngle)
-	rend.camera.LookAt( catModel.translation )
+
+	if modelIndex < len(rend.scene):
+		targetModel = rend.scene[modelIndex]  # Selecciona el modelo visible
+		rend.camera.Orbit(targetModel.translation, camDistance, camAngle)
+		rend.camera.LookAt(targetModel.translation)
+	else:
+		sceneCenter = GetSceneCenter(rend.scene)  # Calcula el centro dinámico
+		rend.camera.Orbit(sceneCenter, camDistance, camAngle)
+		rend.camera.LookAt(sceneCenter)
 
 	rend.Render()
 
