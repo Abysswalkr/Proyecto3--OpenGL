@@ -25,59 +25,80 @@ skyboxTextures = ["skybox/right.jpg",
 
 rend.CreateSkybox(skyboxTextures)
 
+# Gato
 catModel = Model("models/cat.obj")
 catModel.AddTexture("textures/cat.bmp")
 catModel.AddTexture("textures/model_normal.bmp")
-catModel.translation.z = -5
-catModel.scale.x = 2
-catModel.scale.y = 2
-catModel.scale.z = 2
+catModel.translation.x = -2.5
+catModel.translation.y = 0
+catModel.translation.z = -5.3
+catModel.rotation.x = 0
+catModel.rotation.y = 30
+catModel.rotation.z = 0
+catModel.scale.x = 1
+catModel.scale.y = 1
+catModel.scale.z = 1
+catModel.visible = False
 
+# Jake
+jake = Model("models/jake.obj")
+jake.AddTexture("textures/jake.bmp")
+jake.AddTexture("textures/spidey_body_normal.png")
+jake.translation.x = -2.2
+jake.translation.y = 0
+jake.translation.z = -3.8
+jake.rotation.x = 0
+jake.rotation.y = 30
+jake.rotation.z = 0
+jake.scale.x = 0.4
+jake.scale.y = 0.4
+jake.scale.z = 0.4
+jake.visible = False
+
+# Abuelo
 grandpaModel = Model("models/viejo.obj")
 grandpaModel.AddTexture("textures/viejo.bmp")
 grandpaModel.AddTexture("textures/moon_normal.jpg")
-grandpaModel.translation.z = -5
+grandpaModel.translation.x = 1
+grandpaModel.translation.y = 0
+grandpaModel.translation.z = -4
+grandpaModel.rotation.x = 0
+grandpaModel.rotation.y = -20
+grandpaModel.rotation.z = 0
 grandpaModel.scale.x = 2
 grandpaModel.scale.y = 1
 grandpaModel.scale.z = 2
 grandpaModel.visible = False
 
-jake = Model("models/jake.obj")
-jake.AddTexture("textures/jake.bmp")
-jake.AddTexture("textures/spidey_body_normal.png")
-jake.translation.z = -5
-jake.scale.x = 2
-jake.scale.y = 1
-jake.scale.z = 2
-jake.visible = False
 
+
+# Coach
 coachModel = Model("models/Coach.obj")
 coachModel.AddTexture("textures/Coach.bmp")
 coachModel.AddTexture("textures/spidey_body_normal.png")
-coachModel.translation.z = -5
+coachModel.translation.x = 0
+coachModel.translation.y = 0
+coachModel.translation.z = -1
+coachModel.rotation.x = 0
+coachModel.rotation.y = -140
+coachModel.rotation.z = 0
 coachModel.scale.x = 2
 coachModel.scale.y = 1
 coachModel.scale.z = 2
 coachModel.visible = False
 
+
 plane = Model("models/plane.obj")
 plane.AddTexture("textures/muro.jpg")
-# Colocar el plano en posición vertical y ajustar su posición
-plane.translation.x = 0      # Centrar en el eje X
-plane.translation.y = 0      # Elevar o bajar en el eje Y según sea necesario
-plane.translation.z = -6     # Colocar un poco más lejos en el eje Z
-
-# Rotación para que esté en posición vertical (como una pared)
+plane.translation.x = 0
+plane.translation.y = 1
+plane.translation.z = -6
 plane.rotation.y = 0
 plane.rotation.x = 90
 plane.rotation.z = 180
-
-# Ajustar la escala para que parezca una pared
-plane.scale.x = 20     # Ancho de la pared
-plane.scale.y = 20     # Altura de la pared
-plane.scale.z = 1      # Profundidad mínima para que sea una superficie delgada
-
-# Hacer que el plano sea visible
+plane.scale.x = 5
+plane.scale.y = 5
+plane.scale.z = 2
 plane.visible = True
 
 rend.scene.append(catModel)
