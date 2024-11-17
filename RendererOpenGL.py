@@ -116,6 +116,21 @@ plane.scale.z = 2
 plane.visible = True
 plane.InvertNormals()
 
+floor = Model("models/plane.obj")
+floor.AddTexture("textures/vias.jpg")
+floor.translation.x = 0
+floor.translation.y = 0
+floor.translation.z = -3
+floor.rotation.y = 0
+floor.rotation.x = 0
+floor.rotation.z = 180
+floor.scale.x = 5
+floor.scale.y = 5
+floor.scale.z = 7
+floor.visible = True
+floor.InvertNormals()
+
+rend.scene.append(floor)
 rend.scene.append(catModel)
 rend.scene.append(grandpaModel)
 rend.scene.append(jake)
@@ -125,9 +140,9 @@ rend.scene.append(plane)
 vShader = vertex_shader
 fShader = fragment_shader
 
-camDistance = 5
-camAngle = 0
-camAngleY = 0
+camDistance = 7
+camAngle = -30
+camAngleY = 10
 
 
 modelIndex = 0
