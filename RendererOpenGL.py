@@ -1,5 +1,6 @@
 import pygame
 import glm
+import pygame.mixer
 from pygame.locals import *
 
 from gl import Renderer
@@ -24,18 +25,22 @@ width = 1280
 height = 720
 
 pygame.init()
+pygame.mixer.init()
+
+pygame.mixer.music.load("music/subwaysurfers theme.mp3")
+pygame.mixer.music.play(-1)
 
 screen = pygame.display.set_mode((width,height), pygame.OPENGL | pygame.DOUBLEBUF )
 clock = pygame.time.Clock()
 
 rend = Renderer(screen)
 
-skyboxTextures = ["skybox/right.jpg",
-				  "skybox/left.jpg",
-				  "skybox/top.jpg",
-				  "skybox/bottom.jpg",
-				  "skybox/front.jpg",
-				  "skybox/back.jpg"]
+skyboxTextures = ["skybox/right.png",
+				  "skybox/left.png",
+				  "skybox/top.png",
+				  "skybox/bottom.png",
+				  "skybox/front.png",
+				  "skybox/back.png"]
 
 rend.CreateSkybox(skyboxTextures)
 
@@ -295,9 +300,15 @@ while isRunning:
 		rend.camera.Orbit(sceneCenter, camDistance, camAngle)
 		rend.camera.LookAt(sceneCenter)
 
+	if event.type == pygame.QUIT:
+		pygame.mixer.music.stop()  # Detener la música
+		isRunning = False
+
 	rend.Render()
 
 	rend.time += deltaTime
 	pygame.display.flip()
-	
+
+
 pygame.quit()
+pygame.mixer.music.stop()
